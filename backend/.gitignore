@@ -22,7 +22,7 @@ media/
 venv/
 env/
 .venv/
-.env
+*.env
 
 # Local Django settings (keep your settings private!)
 *.local
