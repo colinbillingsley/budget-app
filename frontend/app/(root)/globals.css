@@ -1,0 +1,18 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+	--primary: 235 86% 65%; /* Blurple - Similar to Discord's primary color */
+	--secondary: 242 47% 48%; /* Darker Purple - Complements primary */
+	--accent: 235 86% 80%; /* Lighter Blurple for highlights */
+	--background: 230 35% 15%; /* Dark background */
+	--foreground: 210 40% 96%; /* Light foreground for contrast */
+}
+
+@media (prefers-color-scheme: dark) {
+	:root {
+		--background: 230 35% 10%;
+		--foreground: 210 40% 96%;
+	}
+}
