@@ -4,12 +4,11 @@ import {
 	PiggyBank,
 	Wallet,
 } from "lucide-react";
-import Link from "next/link";
 import React, { ReactNode } from "react";
 import NavLink from "./NavLink";
 
 const LINKICONSIZE = 20;
-const LINKSTROKEWIDTH = 2;
+const LINKSTROKEWIDTH = 1;
 
 interface LinkProps {
 	url: string;

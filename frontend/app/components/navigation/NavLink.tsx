@@ -17,10 +17,8 @@ const NavLink = ({ url, icon, title }: NavLinkProps) => {
 		<Link
 			href={url}
 			className={`${
-				isActive(url)
-					? "text-primary bg-gradient-to-l from-primary/20 to-white border-primary/30"
-					: "border-transparent"
-			} flex items-center gap-2 border font-bold py-2 px-4 hover:bg-primary/10 hover:text-primary content-center transition-all rounded-full`}
+				isActive(url) ? "text-primary bg-primary/15" : ""
+			} flex items-center gap-2 text-sm py-1 px-4 hover:bg-primary/20 hover:text-primary content-center transition-all rounded-md`}
 		>
 			<i>{icon}</i>
 			{title}
