@@ -46,7 +46,7 @@ const Navbar = () => {
 						BudgetWise
 					</a>
 				</div>
-				<ul className="flex items-center gap-2 h-full">
+				<ul className="hidden md:flex items-center gap-2 h-full">
 					{linkItems.map((link, index) => (
 						<li key={index}>
 							<NavLink url={link.url} title={link.title} icon={link.icon} />

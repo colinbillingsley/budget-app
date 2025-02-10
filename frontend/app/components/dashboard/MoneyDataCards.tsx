@@ -14,14 +14,16 @@ const MoneyDataCards = ({ title, moneyAmount }: MoneyDataCardsProps) => {
 	}
 
 	return (
-		<div className="flex flex-col justify-between items-stretch border border-gray-200 rounded-lg p-4 h-36">
+		<div className="flex flex-col justify-between items-stretch bg-white border border-gray-200 rounded-lg p-4 h-36">
 			<div>
 				<h2>{title}</h2>
 			</div>
 
 			<div>
-				<p>${displayReadableAmount(moneyAmount)}</p>
-				<p>percentage (up or down) vs last month</p>
+				<p className="text-2xl font-medium">
+					${displayReadableAmount(moneyAmount)}
+				</p>
+				<p className="text-xs">percentage vs last month</p>
 			</div>
 		</div>
 	);
