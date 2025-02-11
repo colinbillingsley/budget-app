@@ -1,12 +1,12 @@
 import PageContainer from "@/app/components/PageContainer";
 import React from "react";
 
-const Expenses = () => {
+const Transactions = () => {
 	return (
 		<PageContainer>
-			<h1>Expenses</h1>
+			<h1>Transactions</h1>
 		</PageContainer>
 	);
 };
 
-export default Expenses;
+export default Transactions;

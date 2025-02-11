@@ -1,7 +1,9 @@
 import {
 	ChartNoAxesCombined,
+	HandCoins,
 	LayoutDashboard,
 	PiggyBank,
+	ReceiptText,
 	Wallet,
 } from "lucide-react";
 import React, { ReactNode } from "react";
@@ -34,6 +36,16 @@ const linkItems: LinkProps[] = [
 		title: "Expenses",
 		icon: <Wallet size={LINKICONSIZE} strokeWidth={LINKSTROKEWIDTH} />,
 	},
+	{
+		url: "/transactions",
+		title: "Transactions",
+		icon: <ReceiptText size={LINKICONSIZE} strokeWidth={LINKSTROKEWIDTH} />,
+	},
+	{
+		url: "/budgeting",
+		title: "Budgeting",
+		icon: <PiggyBank size={LINKICONSIZE} strokeWidth={LINKSTROKEWIDTH} />,
+	},
 ];
 
 const Navbar = () => {
@@ -41,7 +53,7 @@ const Navbar = () => {
 		<nav className="bg-white text-black border-b border-gray-200">
 			<div className="flex items-center gap-4 h-20 w-full p-4">
 				<div className="flex items-center gap-1 text-primary">
-					<PiggyBank size={20} strokeWidth={2} />
+					<HandCoins size={20} strokeWidth={2} />
 					<a href="/" className="font-bold">
 						BudgetWise
 					</a>

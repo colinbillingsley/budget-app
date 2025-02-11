@@ -7,7 +7,7 @@ const FinanceDataGraph = () => {
 				<div>
 					<h2>Financial Analytics</h2>
 					<p className="text-sm text-gray-400">
-						Brief overview of expenses and income over the months
+						Brief overview of expenses and income
 					</p>
 				</div>
 			</div>

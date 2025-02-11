@@ -1,10 +1,11 @@
+import PageContainer from "@/app/components/PageContainer";
 import React from "react";
 
 const Analytics = () => {
 	return (
-		<div>
+		<PageContainer>
 			<h1>Analytics</h1>
-		</div>
+		</PageContainer>
 	);
 };
 
