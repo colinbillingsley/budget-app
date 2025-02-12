@@ -20,7 +20,7 @@ const MoneyDataCards = ({ title, moneyAmount }: MoneyDataCardsProps) => {
 			</div>
 
 			<div>
-				<p className="text-xl sm:text-2xl font-medium">
+				<p className="text-xl sm:text-3xl font-semibold">
 					${displayReadableAmount(moneyAmount)}
 				</p>
 				<p className="text-xs bg-gray-50 rounded-lg p-2 w-fit">

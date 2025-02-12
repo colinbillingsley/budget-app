@@ -1,5 +1,6 @@
 import {
 	ChartNoAxesCombined,
+	CircleDollarSign,
 	HandCoins,
 	LayoutDashboard,
 	PiggyBank,
@@ -42,9 +43,16 @@ const linkItems: LinkProps[] = [
 		icon: <ReceiptText size={LINKICONSIZE} strokeWidth={LINKSTROKEWIDTH} />,
 	},
 	{
-		url: "/budgeting",
-		title: "Budgeting",
+		url: "/budget",
+		title: "Budget",
 		icon: <PiggyBank size={LINKICONSIZE} strokeWidth={LINKSTROKEWIDTH} />,
+	},
+	{
+		url: "/income",
+		title: "Income",
+		icon: (
+			<CircleDollarSign size={LINKICONSIZE} strokeWidth={LINKSTROKEWIDTH} />
+		),
 	},
 ];
 
