@@ -1,11 +1,11 @@
+"use client";
+import AddCategory from "@/app/components/budget/AddCategory";
 import BudgetCard from "@/app/components/budget/BudgetCard";
-import BudgetsPieChart from "@/app/components/budget/BudgetsPieChart";
 import PageContainer from "@/app/components/PageContainer";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
-import { Plus, PieChart, PiggyBank } from "lucide-react";
-import React from "react";
+import { Card, CardContent, CardTitle } from "@/components/ui/card";
+import { displayReadableAmount } from "@/lib/utils";
+import { Progress } from "@radix-ui/react-progress";
+import React, { useEffect, useState } from "react";
 
 interface BudgetProps {
 	title: string;
@@ -42,6 +42,30 @@ const budgets: BudgetProps[] = [
 ];
 
 const Budget = () => {
+	const [totalBudetSpent, setTotalBudgetSpent] = useState(0);
+	const totalBudget = 2000;
+	const remaining = totalBudget - totalBudetSpent;
+	const percentageUsed = Math.round((totalBudetSpent / totalBudget) * 100);
+
+	function calculateBudgetRemaining() {
+		let tempBudget = totalBudget;
+		budgets.forEach((budget) => {
+			tempBudget -= budget.budgetAmount;
+		});
+
+		return tempBudget;
+	}
+
+	function getTotalBudgetSpent() {
+		budgets.forEach((budget) => {
+			setTotalBudgetSpent((prev) => prev + budget.currentAmountUsed);
+		});
+	}
+
+	useEffect(() => {
+		getTotalBudgetSpent();
+	}, []);
+
 	return (
 		<PageContainer>
 			{/* Header */}
@@ -54,13 +78,40 @@ const Budget = () => {
 
 			{/* Grid Layout */}
 			<div className="grid grid-cols-1 gap-6">
+				<div>
+					<Card className="p-4">
+						<CardTitle>Overall Budget</CardTitle>
+						<CardContent>
+							<p className="text-lg font-semibold">
+								${displayReadableAmount(totalBudetSpent)} / $
+								{displayReadableAmount(totalBudget)}
+							</p>
+							<Progress value={percentageUsed} className="w-full mt-2" />
+							<p
+								className={`text-sm ${
+									remaining < 0 ? "text-red-500" : "text-green-600"
+								}`}
+							>
+								{remaining >= 0
+									? `Remaining: $${remaining.toLocaleString()}`
+									: `Over budget by $${Math.abs(remaining).toLocaleString()}`}
+							</p>
+						</CardContent>
+					</Card>
+					<div>
+						<h2 className="text-xl font-semibold">Total Budget</h2>
+						<p>${displayReadableAmount(totalBudget)}</p>
+					</div>
+
+					<div></div>
+				</div>
 				<div className="flex flex-col gap-4">
 					<div className="w-full">
 						<ul className="grid grid-cols-[repeat(auto-fit,minmax(20rem,1fr))] gap-4">
 							{budgets.length > 0 ? (
 								<>
-									{budgets.map((budget) => (
-										<li>
+									{budgets.map((budget, index) => (
+										<li key={`budgetCard-${index}`}>
 											<BudgetCard
 												title={budget.title}
 												budgetAmount={budget.budgetAmount}
@@ -75,7 +126,7 @@ const Budget = () => {
 							)}
 						</ul>
 					</div>
-					<Button>+ Add Category</Button>
+					<AddCategory budgetRemaining={calculateBudgetRemaining()} />
 				</div>
 			</div>
 		</PageContainer>

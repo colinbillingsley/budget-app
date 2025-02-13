@@ -1,10 +1,11 @@
+import PageContainer from "@/app/components/PageContainer";
 import React from "react";
 
 const BudgetItem = () => {
 	return (
-		<div>
+		<PageContainer>
 			<h1>Budget Item</h1>
-		</div>
+		</PageContainer>
 	);
 };
 

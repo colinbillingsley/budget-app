@@ -1,3 +1,4 @@
+import { displayReadableAmount } from "@/lib/utils";
 import React from "react";
 
 interface MoneyDataCardsProps {
@@ -6,13 +7,6 @@ interface MoneyDataCardsProps {
 }
 
 const MoneyDataCards = ({ title, moneyAmount }: MoneyDataCardsProps) => {
-	function displayReadableAmount(num: number): string {
-		return num.toLocaleString("en-US", {
-			minimumFractionDigits: 2,
-			maximumFractionDigits: 2,
-		});
-	}
-
 	return (
 		<div className="flex flex-col justify-between items-stretch bg-white border border-gray-200 rounded-lg p-4 h-[9rem]">
 			<div>
