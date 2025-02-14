@@ -38,13 +38,14 @@ const BudgetsPieChart = ({ data }: BudgetsPieChartProps) => {
 	};
 
 	return (
-		<ResponsiveContainer width="100%" height="100%">
+		<ResponsiveContainer width="100" height="100%">
 			<PieChart>
 				<Pie
 					data={chartData}
 					dataKey="value"
 					nameKey="name"
-					outerRadius="100%"
+					outerRadius={"100%"}
+					innerRadius={"50%"}
 					paddingAngle={1}
 					startAngle={90}
 					endAngle={450}

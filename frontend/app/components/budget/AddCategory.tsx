@@ -12,17 +12,15 @@ import { PlusIcon } from "lucide-react";
 import { useState } from "react";
 import CategoryForm from "./CategoryForm";
 
-interface AddCategoryProps {
-	budgetRemaining: number;
-}
+interface AddCategoryProps {}
 
-const AddCategory = ({ budgetRemaining }: AddCategoryProps) => {
+const AddCategory = ({}: AddCategoryProps) => {
 	const [isOpen, setIsOpen] = useState(false);
 
 	return (
 		<Dialog open={isOpen} onOpenChange={setIsOpen}>
 			<DialogTrigger asChild>
-				<Button>
+				<Button className="w-full">
 					<PlusIcon />
 					Add Category
 				</Button>
@@ -36,7 +34,7 @@ const AddCategory = ({ budgetRemaining }: AddCategoryProps) => {
 					</DialogDescription>
 				</DialogHeader>
 
-				<CategoryForm setIsOpen={setIsOpen} budgetRemaining={budgetRemaining} />
+				<CategoryForm setIsOpen={setIsOpen} />
 			</DialogContent>
 		</Dialog>
 	);

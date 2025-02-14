@@ -11,3 +11,7 @@ export function displayReadableAmount(num: number): string {
 		maximumFractionDigits: 2,
 	});
 }
+
+export function calculateBudgetUsed(budget: number, spent: number): number {
+	return Math.round((spent / budget) * 100);
+}

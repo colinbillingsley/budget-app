@@ -1,3 +1,5 @@
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
@@ -26,10 +28,16 @@ export default function RootLayout({
 	return (
 		<html lang="en" className="min-h-screen min-w-full">
 			<body
-				className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background`}
+				className={`w-full h-full ${geistSans.variable} ${geistMono.variable} antialiased bg-background`}
 			>
-				<Navbar />
-				{children}
+				<SidebarProvider className="w-full h-full">
+					<Navbar />
+
+					<main className="w-full h-full">
+						<SidebarTrigger />
+						{children}
+					</main>
+				</SidebarProvider>
 			</body>
 		</html>
 	);
