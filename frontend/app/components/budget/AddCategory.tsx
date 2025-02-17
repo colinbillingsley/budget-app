@@ -25,16 +25,16 @@ const AddCategory = ({}: AddCategoryProps) => {
 					Add Category
 				</Button>
 			</DialogTrigger>
-			<DialogContent>
-				<DialogHeader>
+			<DialogContent className="flex flex-col w-full h-full sm:w-[30rem] sm:h-fit">
+				<DialogHeader className="">
 					<DialogTitle>Add a category</DialogTitle>
 					<DialogDescription>
 						Add a category and set its budget. Money spent in this category will
-						also be added to the overall budget.
+						also be added to the overall current budget spent.
 					</DialogDescription>
 				</DialogHeader>
 
-				<CategoryForm setIsOpen={setIsOpen} />
+				<CategoryForm isOpen={isOpen} setIsOpen={setIsOpen} />
 			</DialogContent>
 		</Dialog>
 	);

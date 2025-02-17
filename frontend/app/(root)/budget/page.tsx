@@ -1,8 +1,7 @@
 "use client";
 import AddCategory from "@/app/components/budget/AddCategory";
-import BudgetCard from "@/app/components/budget/BudgetCard";
-import BudgetsPieChart from "@/app/components/budget/BudgetsPieChart";
 import PageContainer from "@/app/components/PageContainer";
+import { Category, useCategoryContext } from "@/app/context/CategoriesContext";
 import {
 	Card,
 	CardContent,
@@ -12,62 +11,77 @@ import {
 } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { calculateBudgetUsed, displayReadableAmount } from "@/lib/utils";
+import { Frown } from "lucide-react";
 import React, { useEffect, useState } from "react";
-
-interface BudgetProps {
-	title: string;
-	budgetAmount: number;
-	currentAmountUsed: number;
-	color: string;
-}
-
-const budgets: BudgetProps[] = [
-	{
-		title: "Groceries",
-		budgetAmount: 300,
-		currentAmountUsed: 100,
-		color: "#4F46E5",
-	},
-	{
-		title: "Rent",
-		budgetAmount: 1300,
-		currentAmountUsed: 1100.23,
-		color: "#10B981",
-	},
-	{
-		title: "Subscriptions",
-		budgetAmount: 20,
-		currentAmountUsed: 20,
-		color: "#F59E0B",
-	},
-	{
-		title: "Restaurants",
-		budgetAmount: 200,
-		currentAmountUsed: 100,
-		color: "#F23E0B",
-	},
-];
+import CategoryCard from "@/app/components/budget/CategoryCard";
 
 const Budget = () => {
-	const [totalBudetSpent, setTotalBudgetSpent] = useState(0);
-	const totalBudget = 2000;
+	const { categories, getNumberOfCategories } = useCategoryContext();
+	const [overallBudget, setOverallBudget] = useState<number>(0);
+	const [totalBudgetSpent, setTotalBudgetSpent] = useState<number>(0);
+	const [remainingBudget, setRemainingBudget] = useState<number>(0);
 
-	function getTotalBudgetSpent() {
-		budgets.forEach((budget) => {
-			setTotalBudgetSpent((prev) => prev + budget.currentAmountUsed);
-		});
+	// get the overall budget data information
+	async function getBudgetData(): Promise<void> {
+		const overall = await calculateOverallBudget();
+		const spent = await calculateTotalBudgetSpent();
+		await calculateRemainingBudget(overall, spent);
 	}
 
-	function determineLargestCategory() {
+	// calculate overall budget by adding all the budgets from all categories
+	async function calculateOverallBudget(): Promise<number> {
+		let totalBudget: number = 0;
+		if (categories.length > 0) {
+			categories.forEach((category) => {
+				totalBudget += category.budget;
+			});
+			setOverallBudget(totalBudget);
+		} else setOverallBudget(totalBudget);
+		return totalBudget;
+	}
+
+	// get the total budget used in the overall budget from all categories combined
+	async function calculateTotalBudgetSpent(): Promise<number> {
+		let totalSpent: number = 0;
+		if (categories.length > 0) {
+			categories.forEach((category) => {
+				totalSpent += category.budgetUsed;
+			});
+			setTotalBudgetSpent(totalSpent);
+		} else setTotalBudgetSpent(totalSpent);
+		return totalSpent;
+	}
+
+	// calculate the remaining overall budget from the amount used from all categories
+	async function calculateRemainingBudget(
+		total: number,
+		spent: number
+	): Promise<void> {
+		setRemainingBudget(total - spent);
+	}
+
+	// determine if any of the bugdet has been spent, true if it has, and false otherwise
+	function hasBugetBeenSpent() {
+		return totalBudgetSpent === 0 ? false : true;
+	}
+
+	function getCategoriesSpent() {
+		return categories.filter((cat) => cat.budgetUsed !== 0);
+	}
+
+	// get the category that has spent most of the budget so far
+	function determineLargestCategory(): { spent: number; title: string } {
 		let largestCategory = {
 			spent: 0,
 			title: "",
 		};
 
-		budgets.forEach((budget) => {
-			if (largestCategory.spent < budget.currentAmountUsed) {
-				largestCategory.spent = budget.currentAmountUsed;
-				largestCategory.title = budget.title;
+		const categoriesSpent: Category[] = getCategoriesSpent();
+
+		categoriesSpent.forEach((category) => {
+			if (largestCategory.spent < category.budgetUsed) {
+				largestCategory.spent = category.budgetUsed;
+				largestCategory.title = category.title;
 			}
 		});
 
@@ -77,8 +91,8 @@ const Budget = () => {
 	const largestCategory = determineLargestCategory();
 
 	useEffect(() => {
-		getTotalBudgetSpent();
-	}, []);
+		getBudgetData();
+	}, [categories]);
 
 	return (
 		<PageContainer>
@@ -97,59 +111,80 @@ const Budget = () => {
 						<CardTitle className="text-xl">Overall Budget</CardTitle>
 					</CardHeader>
 					<CardContent className="space-y-4">
-						<div className="flex items-center justify-between">
+						<div className="text-sm sm:text-base flex items-center justify-between">
 							<p>Total Budget</p>
-							<p>${displayReadableAmount(totalBudget)}</p>
+							<p>${displayReadableAmount(overallBudget)}</p>
 						</div>
 
-						<div className="flex items-center justify-between">
+						<div className="text-sm sm:text-base flex items-center justify-between">
 							<p>Current Budget Spent</p>
-							<p>${displayReadableAmount(totalBudetSpent)}</p>
+							<p>${displayReadableAmount(totalBudgetSpent)}</p>
 						</div>
 
 						<Progress
-							value={calculateBudgetUsed(totalBudget, totalBudetSpent)}
+							value={calculateBudgetUsed(overallBudget, totalBudgetSpent)}
 							progressColor="bg-primary"
 							barColor="bg-black/20"
 						/>
 
-						<div
-							className="flex items-center gap-1
-									"
-						>
+						<div className="flex items-center gap-1 text-sm sm:text-base">
 							<p>Budget Remaining: </p>
-							<p>${displayReadableAmount(totalBudget - totalBudetSpent)}</p>
+							<p>${displayReadableAmount(remainingBudget)}</p>
 						</div>
 					</CardContent>
-					<CardFooter className="mt-auto p-2 text-sm">
-						<p className="w-full bg-black/5 rounded-md p-3">
-							Most of your budget has been used in {largestCategory.title}, with
-							${largestCategory.spent} being spent so far.
-						</p>
+					<CardFooter className="flex-col gap-4 mt-auto p-2 text-sm">
+						{getNumberOfCategories() !== 0 ? (
+							<>
+								{hasBugetBeenSpent() ? (
+									<p className="text-xs w-full bg-black/10 rounded-md p-3 text-center">
+										Most of your budget has been used in {largestCategory.title}
+										, with ${largestCategory.spent} being spent so far.
+									</p>
+								) : (
+									<p className="text-xs w-full bg-black/10 rounded-md p-3 text-center">
+										Nice! Looks like you are adding categories to your budget!
+										Now you can begin adding expenses to your categories!
+									</p>
+								)}
+							</>
+						) : (
+							<div className="flex flex-col items-center gap-2 border border-gray-200 rounded-lg p-4 w-full bg-black/10 text-center text-xs">
+								<p>Oh no your budget is empty! Start by adding a category.</p>
+								<div>
+									<AddCategory />
+								</div>
+							</div>
+						)}
 					</CardFooter>
 				</Card>
 
 				<div className="w-full space-y-4">
 					<h2 className="text-xl font-semibold">Categories</h2>
 					<div className="w-full">
-						<ul className="grid grid-cols-[repeat(auto-fit,minmax(20rem,1fr))] gap-4">
-							{budgets.length > 0 ? (
+						{categories.length > 0 ? (
+							<ul className="grid grid-cols-[repeat(auto-fit,minmax(15rem,1fr))] gap-4">
 								<>
-									{budgets.map((budget, index) => (
-										<li key={`budgetCard-${index}`}>
-											<BudgetCard
-												title={budget.title}
-												budgetAmount={budget.budgetAmount}
-												currentAmountUsed={budget.currentAmountUsed}
-												color={budget.color}
+									{categories.map((category, index) => (
+										<li key={`categoryCard-${category.id}`}>
+											<CategoryCard
+												title={category.title}
+												budgetAmount={category.budget}
+												currentAmountUsed={category.budgetUsed}
+												color={category.color}
 											/>
 										</li>
 									))}
 								</>
-							) : (
-								""
-							)}
-						</ul>
+							</ul>
+						) : (
+							<div className="flex flex-col items-center justify-center gap-1 border border-gray-200 p-4 h-[20rem] rounded-lg text-gray-400">
+								<Frown size={30} strokeWidth={1} />
+								<p className="text-sm text-center">
+									No categories have been added. Get started by adding a
+									category!
+								</p>
+							</div>
+						)}
 					</div>
 					<AddCategory />
 				</div>

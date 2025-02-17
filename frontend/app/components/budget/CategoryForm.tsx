@@ -1,39 +1,101 @@
 "use client";
+import { Category, useCategoryContext } from "@/app/context/CategoriesContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { displayReadableAmount } from "@/lib/utils";
-import React, { Dispatch, SetStateAction, useState } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
+import ColorPicker from "./ColorPicker";
 
 interface CategoryFormProps {
+	isOpen: boolean;
 	setIsOpen: Dispatch<SetStateAction<boolean>>;
 }
 
-const CategoryForm = ({ setIsOpen }: CategoryFormProps) => {
+export interface Color {
+	title: string;
+	hex: string;
+	isSelected: boolean;
+}
+
+const CategoryForm = ({ isOpen, setIsOpen }: CategoryFormProps) => {
+	const { addCategory, getNumberOfCategories } = useCategoryContext();
 	const [categoryName, setCategoryName] = useState("");
 	const [categoryBudget, setCategoryBudget] = useState(0);
+	const [selectedColor, setSelectedColor] = useState<Color | null>(null);
 
-	function handleBudgetInput(e: any) {
-		setCategoryBudget(e.target.value);
+	function resetFormFields() {
+		setCategoryName("");
+		setCategoryBudget(0);
+
+		if (selectedColor) selectedColor.isSelected = false;
+		setSelectedColor(null);
 	}
 
-	function handleCancel(e: any) {
+	function handleNameInput(e: any) {
+		setCategoryName(e.target.value);
+	}
+
+	function handleBudgetInput(e: any) {
+		setCategoryBudget(parseInt(e.target.value));
+	}
+
+	function handleCancel(e: React.FormEvent) {
 		e.preventDefault();
 		setIsOpen(false);
 	}
+
+	async function handleAddCategory(e: React.FormEvent) {
+		e.preventDefault();
+		const numCats = getNumberOfCategories();
+
+		// get the new category object
+		const newCategory: Category = {
+			id: (numCats + 1).toString(),
+			title: categoryName,
+			budget: categoryBudget,
+			budgetUsed: 0,
+			color: selectedColor ? selectedColor.hex : "#000",
+		};
+
+		// add the new category object to existing categories
+		addCategory(newCategory);
+
+		// close the modal
+		setIsOpen(false);
+	}
+
+	// whenever category form modal is closed, reset all the fields
+	useEffect(() => {
+		if (!isOpen) {
+			resetFormFields();
+		}
+	}, [isOpen]);
 
 	return (
 		<form action="" className="space-y-4">
 			<div className="space-y-2">
 				<Label>Category Name</Label>
-				<Input placeholder="Enter a category name" />
+				<Input
+					placeholder="Enter a name for a category (e.g. Rent)"
+					onChange={handleNameInput}
+					className="border-2 border-accent text-sm transition-all focus:border-primary ring-none"
+				/>
 			</div>
 
 			<div className="space-y-2">
-				<Label htmlFor="number">Budget Limit</Label>
+				<Label>Budget</Label>
 				<Input
 					placeholder="Enter a number for the budget (e.g. 1100)"
 					onChange={handleBudgetInput}
+					className="border-2 border-accent text-sm transition-all focus:border-primary ring-none"
+				/>
+			</div>
+
+			<div className="space-y-2">
+				<Label>Pick a Color</Label>
+				<ColorPicker
+					selectedColor={selectedColor}
+					setSelectedColor={setSelectedColor}
 				/>
 			</div>
 
@@ -41,7 +103,7 @@ const CategoryForm = ({ setIsOpen }: CategoryFormProps) => {
 				<Button variant={"outline"} onClick={handleCancel}>
 					Cancel
 				</Button>
-				<Button>Create</Button>
+				<Button onClick={handleAddCategory}>Create</Button>
 			</div>
 		</form>
 	);

@@ -5,19 +5,19 @@ import { AlertTriangle, BellRing, CheckCircle, XCircle } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 
-interface BudgetCardProps {
+interface CategoryCardProps {
 	title: string;
 	budgetAmount: number;
 	currentAmountUsed: number;
 	color: string;
 }
 
-const BudgetCard = ({
+const CategoryCard = ({
 	title,
 	budgetAmount,
 	currentAmountUsed,
 	color,
-}: BudgetCardProps) => {
+}: CategoryCardProps) => {
 	return (
 		<Link href={`/budget/${title.toLocaleLowerCase()}`}>
 			<Card
@@ -36,7 +36,7 @@ const BudgetCard = ({
 						</span>
 					</span>
 					<div className="flex flex-col gap-2 bg-black/10 px-2 py-3 rounded-lg">
-						<div className="flex items-center justify-between w-full">
+						<div className="text-sm sm:text-base flex items-center justify-between w-full">
 							${displayReadableAmount(currentAmountUsed)}
 							<span className="">${displayReadableAmount(budgetAmount)}</span>
 						</div>
@@ -53,4 +53,4 @@ const BudgetCard = ({
 	);
 };
 
-export default BudgetCard;
+export default CategoryCard;

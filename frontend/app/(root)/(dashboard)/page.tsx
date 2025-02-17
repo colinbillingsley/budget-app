@@ -1,7 +1,7 @@
-import AllExpenses from "../components/dashboard/AllExpenses";
-import FinanceDataGraph from "../components/dashboard/FinanceDataGraph";
-import MoneyDataCards from "../components/dashboard/MoneyDataCards";
-import PageContainer from "../components/PageContainer";
+import AllExpenses from "../../components/dashboard/AllExpenses";
+import FinanceDataGraph from "../../components/dashboard/FinanceDataGraph";
+import MoneyDataCards from "../../components/dashboard/MoneyDataCards";
+import PageContainer from "../../components/PageContainer";
 
 export default function Home() {
 	return (
