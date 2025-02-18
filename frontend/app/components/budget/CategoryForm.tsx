@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import ColorPicker from "./ColorPicker";
+import CategoryComboBox from "./CategoryComboBox";
 
 interface CategoryFormProps {
 	isOpen: boolean;
@@ -31,12 +32,12 @@ const CategoryForm = ({ isOpen, setIsOpen }: CategoryFormProps) => {
 		setSelectedColor(null);
 	}
 
-	function handleNameInput(e: any) {
+	function handleNameInput(e: React.ChangeEvent<HTMLInputElement>) {
 		setCategoryName(e.target.value);
 	}
 
-	function handleBudgetInput(e: any) {
-		setCategoryBudget(parseInt(e.target.value));
+	function handleBudgetInput(e: React.ChangeEvent<HTMLInputElement>) {
+		setCategoryBudget(parseFloat(e.target.value) || 0);
 	}
 
 	function handleCancel(e: React.FormEvent) {
@@ -51,7 +52,7 @@ const CategoryForm = ({ isOpen, setIsOpen }: CategoryFormProps) => {
 		// get the new category object
 		const newCategory: Category = {
 			id: (numCats + 1).toString(),
-			title: categoryName,
+			title: categoryName.trim(),
 			budget: categoryBudget,
 			budgetUsed: 0,
 			color: selectedColor ? selectedColor.hex : "#000",
@@ -73,18 +74,18 @@ const CategoryForm = ({ isOpen, setIsOpen }: CategoryFormProps) => {
 
 	return (
 		<form action="" className="space-y-4">
-			<div className="space-y-2">
+			<div className="space-y-2 flex flex-col gap-1">
 				<Label>Category Name</Label>
-				<Input
-					placeholder="Enter a name for a category (e.g. Rent)"
-					onChange={handleNameInput}
-					className="border-2 border-accent text-sm transition-all focus:border-primary ring-none"
+				<CategoryComboBox
+					categoryName={categoryName}
+					setCategoryName={setCategoryName}
 				/>
 			</div>
 
 			<div className="space-y-2">
 				<Label>Budget</Label>
 				<Input
+					type="number"
 					placeholder="Enter a number for the budget (e.g. 1100)"
 					onChange={handleBudgetInput}
 					className="border-2 border-accent text-sm transition-all focus:border-primary ring-none"

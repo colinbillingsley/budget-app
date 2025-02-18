@@ -14,7 +14,7 @@ import CategoryForm from "./CategoryForm";
 
 interface AddCategoryProps {}
 
-const AddCategory = ({}: AddCategoryProps) => {
+const AddBudget = ({}: AddCategoryProps) => {
 	const [isOpen, setIsOpen] = useState(false);
 
 	return (
@@ -22,15 +22,15 @@ const AddCategory = ({}: AddCategoryProps) => {
 			<DialogTrigger asChild>
 				<Button className="w-full">
 					<PlusIcon />
-					Add Category
+					Add Budget
 				</Button>
 			</DialogTrigger>
 			<DialogContent className="flex flex-col w-full h-full sm:w-[30rem] sm:h-fit">
 				<DialogHeader className="">
-					<DialogTitle>Add a category</DialogTitle>
+					<DialogTitle>Create a Budget</DialogTitle>
 					<DialogDescription>
-						Add a category and set its budget. Money spent in this category will
-						also be added to the overall current budget spent.
+						Select a category and set its budget. Money spent in this category
+						will also be added to the overall current budget spent.
 					</DialogDescription>
 				</DialogHeader>
 
@@ -40,4 +40,4 @@ const AddCategory = ({}: AddCategoryProps) => {
 	);
 };
 
-export default AddCategory;
+export default AddBudget;

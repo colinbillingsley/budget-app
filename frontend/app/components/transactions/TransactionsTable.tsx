@@ -1,0 +1,152 @@
+"use client";
+
+import { useState } from "react";
+import {
+	Table,
+	TableBody,
+	TableCaption,
+	TableCell,
+	TableHead,
+	TableHeader,
+	TableRow,
+} from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+
+type Transaction = {
+	id: string;
+	categoryId?: string;
+	type: "Income" | "Expense";
+	amount: number;
+	date: string;
+	notes?: string;
+};
+
+// Mock data for demonstration
+const mockTransactions: Transaction[] = [
+	{
+		id: "1",
+		type: "Income",
+		amount: 1000,
+		date: "2023-05-01",
+		notes: "Salary",
+	},
+	{
+		id: "2",
+		categoryId: "groceries",
+		type: "Expense",
+		amount: 50,
+		date: "2023-05-02",
+		notes: "Grocery shopping",
+	},
+	{
+		id: "3",
+		categoryId: "utilities",
+		type: "Expense",
+		amount: 100,
+		date: "2023-05-03",
+		notes: "Electricity bill",
+	},
+	{
+		id: "4",
+		type: "Income",
+		amount: 200,
+		date: "2023-05-04",
+		notes: "Freelance work",
+	},
+	{
+		id: "5",
+		categoryId: "entertainment",
+		type: "Expense",
+		amount: 30,
+		date: "2023-05-05",
+		notes: "Movie tickets",
+	},
+	{
+		id: "6",
+		categoryId: "entertainment",
+		type: "Expense",
+		amount: 30,
+		date: "2023-05-05",
+		notes: "Movie tickets",
+	},
+	// Add more mock transactions as needed
+];
+
+const ITEMS_PER_PAGE = 5;
+
+export function TransactionTable() {
+	const [currentPage, setCurrentPage] = useState(1);
+
+	const totalPages = Math.ceil(mockTransactions.length / ITEMS_PER_PAGE);
+	const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+	const endIndex = startIndex + ITEMS_PER_PAGE;
+	const currentTransactions = mockTransactions.slice(startIndex, endIndex);
+
+	return (
+		<div>
+			<Table>
+				<TableCaption>A list of your recent transactions.</TableCaption>
+				<TableHeader>
+					<TableRow>
+						<TableHead>Type</TableHead>
+						<TableHead>Amount</TableHead>
+						<TableHead>Date</TableHead>
+						<TableHead>Category</TableHead>
+						<TableHead>Notes</TableHead>
+					</TableRow>
+				</TableHeader>
+				<TableBody>
+					{currentTransactions.map((transaction) => (
+						<TableRow key={transaction.id}>
+							<TableCell className="h-16 p-2">
+								<p className={`font-medium`}>{transaction.type}</p>
+							</TableCell>
+							<TableCell>
+								<p
+									className={`${
+										transaction.type === "Expense"
+											? "text-red-700 bg-red-400/25"
+											: "text-green-700 bg-green-400/25"
+									} w-fit px-3 py-1 rounded-full`}
+								>
+									{transaction.type === "Expense"
+										? `-$${transaction.amount.toFixed(2)}`
+										: `+$${transaction.amount.toFixed(2)}`}
+								</p>
+							</TableCell>
+							<TableCell>{transaction.date}</TableCell>
+							<TableCell>{transaction.categoryId || "N/A"}</TableCell>
+							<TableCell>{transaction.notes || "N/A"}</TableCell>
+						</TableRow>
+					))}
+				</TableBody>
+			</Table>
+			<div className="flex items-center justify-end space-x-2 py-4">
+				<Button
+					variant="outline"
+					size="sm"
+					onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+					disabled={currentPage === 1}
+				>
+					<ChevronLeft size={10} />
+					Previous
+				</Button>
+				<div className="text-sm font-medium">
+					Page {currentPage} of {totalPages}
+				</div>
+				<Button
+					variant="outline"
+					size="sm"
+					onClick={() =>
+						setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+					}
+					disabled={currentPage === totalPages}
+				>
+					Next
+					<ChevronRight size={10} />
+				</Button>
+			</div>
+		</div>
+	);
+}

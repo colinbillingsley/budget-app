@@ -1,5 +1,4 @@
 "use client";
-import AddCategory from "@/app/components/budget/AddCategory";
 import PageContainer from "@/app/components/PageContainer";
 import { Category, useCategoryContext } from "@/app/context/CategoriesContext";
 import {
@@ -14,6 +13,8 @@ import { calculateBudgetUsed, displayReadableAmount } from "@/lib/utils";
 import { Frown } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import CategoryCard from "@/app/components/budget/CategoryCard";
+import H1 from "@/app/components/H1";
+import AddBudget from "@/app/components/budget/AddBudget";
 
 const Budget = () => {
 	const { categories, getNumberOfCategories } = useCategoryContext();
@@ -32,11 +33,9 @@ const Budget = () => {
 	async function calculateOverallBudget(): Promise<number> {
 		let totalBudget: number = 0;
 		if (categories.length > 0) {
-			categories.forEach((category) => {
-				totalBudget += category.budget;
-			});
-			setOverallBudget(totalBudget);
-		} else setOverallBudget(totalBudget);
+			totalBudget = categories.reduce((sum, cat) => sum + cat.budget, 0);
+		}
+		setOverallBudget(totalBudget);
 		return totalBudget;
 	}
 
@@ -44,11 +43,9 @@ const Budget = () => {
 	async function calculateTotalBudgetSpent(): Promise<number> {
 		let totalSpent: number = 0;
 		if (categories.length > 0) {
-			categories.forEach((category) => {
-				totalSpent += category.budgetUsed;
-			});
-			setTotalBudgetSpent(totalSpent);
-		} else setTotalBudgetSpent(totalSpent);
+			totalSpent = categories.reduce((sum, cat) => sum + cat.budgetUsed, 0);
+		}
+		setTotalBudgetSpent(totalSpent);
 		return totalSpent;
 	}
 
@@ -98,7 +95,7 @@ const Budget = () => {
 		<PageContainer>
 			{/* Header */}
 			<div className="mb-6">
-				<h1 className="text-3xl font-semibold text-primary">Budget Overview</h1>
+				<H1>Budget Overview</H1>
 				<p className="text-gray-400 text-sm">
 					Manage your budget for better spending control.
 				</p>
@@ -142,16 +139,20 @@ const Budget = () => {
 									</p>
 								) : (
 									<p className="text-xs w-full bg-black/10 rounded-md p-3 text-center">
-										Nice! Looks like you are adding categories to your budget!
-										Now you can begin adding expenses to your categories!
+										Nice! Looks like you are creating budgets for your
+										categories! Now you can see how you're doing with your
+										expenses for each category!
 									</p>
 								)}
 							</>
 						) : (
 							<div className="flex flex-col items-center gap-2 border border-gray-200 rounded-lg p-4 w-full bg-black/10 text-center text-xs">
-								<p>Oh no your budget is empty! Start by adding a category.</p>
+								<p>
+									Oh no your budget is empty! Start by adding a budget to a
+									category.
+								</p>
 								<div>
-									<AddCategory />
+									<AddBudget />
 								</div>
 							</div>
 						)}
@@ -180,13 +181,13 @@ const Budget = () => {
 							<div className="flex flex-col items-center justify-center gap-1 border border-gray-200 p-4 h-[20rem] rounded-lg text-gray-400">
 								<Frown size={30} strokeWidth={1} />
 								<p className="text-sm text-center">
-									No categories have been added. Get started by adding a
-									category!
+									No budgets have been added to your categories. Get started by
+									making a budget for a category!
 								</p>
 							</div>
 						)}
 					</div>
-					<AddCategory />
+					<AddBudget />
 				</div>
 			</div>
 		</PageContainer>
