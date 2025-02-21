@@ -1,11 +1,45 @@
+"use client";
+import React, { useState } from "react";
 import H1 from "@/app/components/H1";
 import PageContainer from "@/app/components/PageContainer";
 import { TransactionTable } from "@/app/components/transactions/TransactionsTable";
-import React from "react";
+import { Button } from "@/components/ui/button"; // Assuming you're using shadcn
+import {
+	BadgeDollarSign,
+	CalendarIcon,
+	ChevronDown,
+	ChevronUp,
+	Landmark,
+	Scale,
+} from "lucide-react";
+import TransactionsInfoCards from "@/app/components/transactions/TransactionsInfoCards";
+import { categories } from "@/app/components/budget/CategoryComboBox";
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
+import {
+	Popover,
+	PopoverContent,
+	PopoverTrigger,
+} from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
+import { format } from "date-fns";
+import { Calendar } from "@/components/ui/calendar";
 
 const Transactions = () => {
+	const [showFilters, setShowFilters] = useState(false);
+	const [date, setDate] = useState<Date>();
+	const [categoryFilter, setCategoryFilter] = useState<string>("");
+	const [amountFilter, setAmountFilter] = useState<number | null>(null);
+
 	return (
 		<PageContainer className="space-y-4">
+			{/* HEADER */}
 			<div>
 				<H1>Transactions</H1>
 				<p className="text-gray-400 text-sm">
@@ -13,12 +47,89 @@ const Transactions = () => {
 				</p>
 			</div>
 
-			<div>
-				<div className="w-full bg-black/10 p-4">
-					<p className="">Filters</p>
+			{/* SUMMARY */}
+			<div className="grid grid-cols-[repeat(auto-fit,minmax(15rem,1fr))] gap-4">
+				<TransactionsInfoCards
+					title={"Total Income"}
+					amount={4000}
+					icon={<Landmark size={80} strokeWidth={1} />}
+					className="bg-green-500 text-white"
+				/>
+				<TransactionsInfoCards
+					title={"Total Expenses"}
+					amount={2200}
+					icon={<BadgeDollarSign size={80} strokeWidth={1} />}
+					className="bg-red-500 text-white"
+				/>
+				<TransactionsInfoCards
+					title={"Net Balance"}
+					amount={1600}
+					icon={<Scale size={80} strokeWidth={1} />}
+					className="bg-blue-500 text-white"
+				/>
+			</div>
+
+			{/* FILTERS (COLLAPSIBLE) */}
+			<div className="w-full bg-white p-4 rounded-lg border-2 border-gray-200">
+				<div className="flex items-center justify-between">
+					<p className="font-semibold">All Transactions</p>
+					<Button
+						variant="ghost"
+						onClick={() => setShowFilters(!showFilters)}
+						className="flex items-center text-primary hover:text-primary hover:bg-accent/25"
+					>
+						{showFilters ? "Hide" : "Show"} Filters
+						{showFilters ? (
+							<ChevronUp className="ml-2" />
+						) : (
+							<ChevronDown className="ml-2" />
+						)}
+					</Button>
+				</div>
+
+				<div
+					className={`grid grid-cols-3 gap-4 overflow-hidden transition-all duration-300 ${
+						showFilters ? "max-h-40 opacity-100 mt-4" : "max-h-0 opacity-0 mt-0"
+					}`}
+				>
+					<input
+						type="date"
+						className="p-2 w-full border rounded-md bg-white text-gray-700 focus:outline-none focus:border-gray-500"
+					/>
+
+					<Select onValueChange={(value) => setCategoryFilter(value)}>
+						<SelectTrigger
+							className={`p-2 h-12 border rounded-md w-full ${
+								categoryFilter !== "" ? "text-black" : "text-gray-500"
+							}`}
+						>
+							<SelectValue placeholder="Select a category" />
+						</SelectTrigger>
+						<SelectContent>
+							<SelectItem value={"all"} className="focus:bg-accent/25">
+								All Categories
+							</SelectItem>
+							{categories.map((category, index) => (
+								<SelectItem
+									key={`filter-${category.value}`}
+									value={category.value}
+									className="focus:bg-accent/25"
+								>
+									{category.label}
+								</SelectItem>
+							))}
+						</SelectContent>
+					</Select>
+					<Input
+						type="number"
+						placeholder="Amount"
+						className="p-2 h-12 border rounded-md w-full"
+						onChange={(e) => setAmountFilter(parseFloat(e.target.value))}
+					/>
 				</div>
 			</div>
 
+			{/* TRANSACTIONS TABLE */}
 			<div>
 				<TransactionTable />
 			</div>

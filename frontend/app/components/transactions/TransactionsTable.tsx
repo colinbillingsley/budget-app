@@ -84,7 +84,7 @@ export function TransactionTable() {
 	const currentTransactions = mockTransactions.slice(startIndex, endIndex);
 
 	return (
-		<div>
+		<div className="rounded-lg border-2 border-gray-200 p-4">
 			<Table>
 				<TableCaption>A list of your recent transactions.</TableCaption>
 				<TableHeader>
