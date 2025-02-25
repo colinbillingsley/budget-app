@@ -133,12 +133,12 @@ const Budget = () => {
 						{getNumberOfCategories() !== 0 ? (
 							<>
 								{hasBugetBeenSpent() ? (
-									<p className="text-xs w-full bg-black/10 rounded-md p-3 text-center">
+									<p className="text-xs w-full bg-black/5 rounded-md p-3 text-center">
 										Most of your budget has been used in {largestCategory.title}
 										, with ${largestCategory.spent} being spent so far.
 									</p>
 								) : (
-									<p className="text-xs w-full bg-black/10 rounded-md p-3 text-center">
+									<p className="text-xs w-full bg-black/5 rounded-md p-3 text-center">
 										Nice! Looks like you are creating budgets for your
 										categories! Now you can see how you're doing with your
 										expenses for each category!
@@ -146,7 +146,7 @@ const Budget = () => {
 								)}
 							</>
 						) : (
-							<div className="flex flex-col items-center gap-2 border border-gray-200 rounded-lg p-4 w-full bg-black/10 text-center text-xs">
+							<div className="flex flex-col items-center gap-2 border border-gray-200 rounded-lg p-4 w-full bg-black/5 text-center text-xs">
 								<p>
 									Oh no your budget is empty! Start by adding a budget to a
 									category.
@@ -178,7 +178,7 @@ const Budget = () => {
 								</>
 							</ul>
 						) : (
-							<div className="flex flex-col items-center justify-center gap-1 border border-gray-200 p-4 h-[20rem] rounded-lg text-gray-400">
+							<div className="flex flex-col items-center justify-center gap-1 bg-white border border-gray-200 p-4 h-[20rem] rounded-lg text-gray-400">
 								<Frown size={30} strokeWidth={1} />
 								<p className="text-sm text-center">
 									No budgets have been added to your categories. Get started by
