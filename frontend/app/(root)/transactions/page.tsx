@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import H1 from "@/app/components/H1";
 import PageContainer from "@/app/components/PageContainer";
 import { TransactionTable } from "@/app/components/transactions/TransactionsTable";
@@ -13,7 +13,6 @@ import {
 	SlidersHorizontal,
 } from "lucide-react";
 import TransactionsInfoCards from "@/app/components/transactions/TransactionsInfoCards";
-import { categories } from "@/app/components/budget/CategoryComboBox";
 import {
 	Select,
 	SelectContent,
@@ -22,6 +21,9 @@ import {
 	SelectValue,
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
+import { categories } from "@/lib/utils";
+import { useTransactionContext } from "@/app/context/TransactionsContext";
+import AddTransactionButton from "@/app/components/transactions/AddTransactionButton";
 
 const Transactions = () => {
 	const [showFilters, setShowFilters] = useState(false);
@@ -29,6 +31,33 @@ const Transactions = () => {
 	const [categoryFilter, setCategoryFilter] = useState<string>("");
 	const [typeFilter, setTypeFilter] = useState<string>("");
 	const [amountFilter, setAmountFilter] = useState<number | null>(null);
+
+	const [totalIncome, setTotalIncome] = useState<number>(0);
+	const [totalExpense, setTotalExpense] = useState<number>(0);
+	const [netBalance, setNetBalance] = useState<number>(0);
+	const { getTotalIncome, getTotalExpense, getNetBalance } =
+		useTransactionContext();
+
+	function computeTotalIncome() {
+		const total = getTotalIncome();
+		setTotalIncome(total);
+	}
+
+	function computeTotalExpenses() {
+		const total = getTotalExpense();
+		setTotalExpense(total);
+	}
+
+	function computeNetBalance() {
+		const total = getNetBalance();
+		setNetBalance(total);
+	}
+
+	useEffect(() => {
+		computeTotalIncome();
+		computeTotalExpenses();
+		computeNetBalance();
+	}, []);
 
 	return (
 		<PageContainer className="space-y-4">
@@ -44,23 +73,25 @@ const Transactions = () => {
 			<div className="grid grid-cols-[repeat(auto-fit,minmax(15rem,1fr))] gap-4">
 				<TransactionsInfoCards
 					title={"Total Income"}
-					amount={4000}
+					amount={totalIncome}
 					icon={<Landmark size={80} strokeWidth={1} />}
 					className="bg-green-500 text-white"
 				/>
 				<TransactionsInfoCards
 					title={"Total Expenses"}
-					amount={2200}
+					amount={totalExpense}
 					icon={<BadgeDollarSign size={80} strokeWidth={1} />}
 					className="bg-red-500 text-white"
 				/>
 				<TransactionsInfoCards
 					title={"Net Balance"}
-					amount={1600}
+					amount={netBalance}
 					icon={<Scale size={80} strokeWidth={1} />}
 					className="bg-blue-500 text-white"
 				/>
 			</div>
+
+			<AddTransactionButton />
 
 			{/* FILTERS (COLLAPSIBLE) */}
 			<div className="w-full bg-white p-4 rounded-lg border-2 border-gray-200">

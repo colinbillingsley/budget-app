@@ -5,6 +5,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Navbar from "../components/navigation/Navbar";
 import { CategoryContextProvider } from "../context/CategoriesContext";
+import { TransactionContextProvider } from "../context/TransactionsContext";
 
 const geistSans = Geist({
 	variable: "--font-geist-sans",
@@ -27,21 +28,23 @@ export default function RootLayout({
 	children: React.ReactNode;
 }>) {
 	return (
-		<CategoryContextProvider>
-			<html lang="en" className="min-h-screen min-w-full">
-				<body
-					className={`w-full h-full ${geistSans.variable} ${geistMono.variable} antialiased bg-background`}
-				>
-					<SidebarProvider className="w-full h-full">
-						<Navbar />
+		<TransactionContextProvider>
+			<CategoryContextProvider>
+				<html lang="en" className="min-h-screen min-w-full">
+					<body
+						className={`w-full h-full ${geistSans.variable} ${geistMono.variable} antialiased bg-background`}
+					>
+						<SidebarProvider className="w-full h-full">
+							<Navbar />
 
-						<main className="w-full h-full">
-							<SidebarTrigger />
-							{children}
-						</main>
-					</SidebarProvider>
-				</body>
-			</html>
-		</CategoryContextProvider>
+							<main className="w-full h-full">
+								<SidebarTrigger />
+								{children}
+							</main>
+						</SidebarProvider>
+					</body>
+				</html>
+			</CategoryContextProvider>
+		</TransactionContextProvider>
 	);
 }
