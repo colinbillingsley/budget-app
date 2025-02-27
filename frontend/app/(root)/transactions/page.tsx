@@ -35,21 +35,24 @@ const Transactions = () => {
 	const [totalIncome, setTotalIncome] = useState<number>(0);
 	const [totalExpense, setTotalExpense] = useState<number>(0);
 	const [netBalance, setNetBalance] = useState<number>(0);
-	const { getTotalIncome, getTotalExpense, getNetBalance } =
+	const { transactions, getTotalIncome, getTotalExpense, getNetBalance } =
 		useTransactionContext();
 
 	function computeTotalIncome() {
 		const total = getTotalIncome();
+		console.log(total);
 		setTotalIncome(total);
 	}
 
 	function computeTotalExpenses() {
 		const total = getTotalExpense();
+		console.log(total);
 		setTotalExpense(total);
 	}
 
 	function computeNetBalance() {
 		const total = getNetBalance();
+		console.log(total);
 		setNetBalance(total);
 	}
 
@@ -57,7 +60,8 @@ const Transactions = () => {
 		computeTotalIncome();
 		computeTotalExpenses();
 		computeNetBalance();
-	}, []);
+		console.log("running");
+	}, [transactions]);
 
 	return (
 		<PageContainer className="space-y-4">

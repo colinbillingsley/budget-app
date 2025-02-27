@@ -1,36 +1,13 @@
 "use client";
 import { createContext, ReactNode, useContext, useState } from "react";
 
-enum Category {
-	Groceries = "groceries",
-	RentMortgage = "rent_mortgage",
-	Utilities = "utilities",
-	Transportation = "transportation",
-	DiningOut = "dining_out",
-	Entertainment = "entertainment",
-	Healthcare = "healthcare",
-	Insurance = "insurance",
-	DebtPayments = "debt_payments",
-	Savings = "savings",
-	Investments = "investments",
-	PersonalCare = "personal_care",
-	Clothing = "clothing",
-	Education = "education",
-	GiftsDonations = "gifts_donations",
-	Subscriptions = "subscriptions",
-	Travel = "travel",
-	Taxes = "taxes",
-	Miscellaneous = "miscellaneous",
-}
-
 export interface Transaction {
 	id: string;
-	title: string;
 	amount: number;
 	type: "Income" | "Expense";
 	date: Date;
-	category: Category;
-	notes: string;
+	category: string;
+	notes?: string;
 }
 
 interface TransactionContextProps {
@@ -69,22 +46,18 @@ export const TransactionContextProvider: React.FC<{ children: ReactNode }> = ({
 
 	function getTotalIncome() {
 		const incomeTrans = filterByType("Income");
-		const totalIncome = 0;
-		incomeTrans.reduce(
+		return incomeTrans.reduce(
 			(accumulator, currentValue) => accumulator + currentValue.amount,
-			totalIncome
+			0
 		);
-		return totalIncome;
 	}
 
 	function getTotalExpense() {
 		const expenseTrans = filterByType("Expense");
-		const totalExpense = 0;
-		expenseTrans.reduce(
+		return expenseTrans.reduce(
 			(accumulator, currentValue) => accumulator + currentValue.amount,
-			totalExpense
+			0
 		);
-		return totalExpense;
 	}
 
 	function getNetBalance() {

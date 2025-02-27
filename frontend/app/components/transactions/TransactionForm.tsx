@@ -6,6 +6,10 @@ import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 import CategoryComboBox from "../budget/CategoryComboBox";
+import {
+	Transaction,
+	useTransactionContext,
+} from "@/app/context/TransactionsContext";
 
 interface TransactionFormProps {
 	isOpen: boolean;
@@ -13,10 +17,14 @@ interface TransactionFormProps {
 }
 
 const TransactionForm = ({ isOpen, setIsOpen }: TransactionFormProps) => {
-	const [transactionType, setTransactionType] = useState<string>("Income");
+	const [transactionType, setTransactionType] = useState<"Income" | "Expense">(
+		"Expense"
+	);
 	const [transactionAmount, setTransactionAmount] = useState(0);
-	const [categoryName, setCategoryName] = useState("");
+	const [categoryName, setCategoryName] = useState<string>("");
 	const [notes, setNotes] = useState<string>("");
+
+	const { transactions, addTransaction } = useTransactionContext();
 
 	function resetFormFields() {
 		setCategoryName("");
@@ -41,6 +49,17 @@ const TransactionForm = ({ isOpen, setIsOpen }: TransactionFormProps) => {
 	async function handleAddTransaction(e: React.FormEvent) {
 		e.preventDefault();
 
+		const newTransaction = {
+			id: (transactions.length + 1).toString(),
+			amount: transactionAmount,
+			type: transactionType,
+			date: new Date(),
+			category: categoryName,
+			notes: notes,
+		};
+
+		addTransaction(newTransaction);
+
 		// close the modal
 		setIsOpen(false);
 	}
@@ -62,7 +81,7 @@ const TransactionForm = ({ isOpen, setIsOpen }: TransactionFormProps) => {
 					className="flex items-center gap-2"
 				>
 					<div
-						className={`flex items-center gap-2 p-3 hover:bg-primary/20 w-fit rounded-lg transition-all ${
+						className={`flex items-center gap-2 p-3 hover:bg-primary/20 w-fit rounded-lg transition-all active:bg-primary/50 ${
 							transactionType === "Income" ? "bg-primary/10" : "bg-transparent"
 						}`}
 					>
@@ -71,7 +90,7 @@ const TransactionForm = ({ isOpen, setIsOpen }: TransactionFormProps) => {
 					</div>
 
 					<div
-						className={`flex items-center gap-2 p-3 hover:bg-primary/10 w-fit rounded-lg transition-all ${
+						className={`flex items-center gap-2 p-3 hover:bg-primary/10 w-fit rounded-lg transition-all active:bg-primary/50 ${
 							transactionType === "Expense" ? "bg-primary/10" : "bg-transparent"
 						}`}
 					>

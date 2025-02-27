@@ -24,7 +24,7 @@ const TransactionsInfoCards = ({
 				<p className="text-xl sm:text-3xl">
 					{amount >= 0
 						? `$${displayReadableAmount(amount)}`
-						: `-$${displayReadableAmount(amount)}`}
+						: `-$${displayReadableAmount(amount * -1)}`}
 				</p>
 				<i className="absolute bottom-1 right-2 opacity-40">{icon}</i>
 			</CardContent>

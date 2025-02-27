@@ -13,6 +13,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useTransactionContext } from "@/app/context/TransactionsContext";
+import { displayTitle } from "../budget/CategoryCard";
 
 // // Mock data for demonstration
 // const mockTransactions: Transaction[] = [
@@ -114,7 +115,9 @@ export function TransactionTable() {
 											</p>
 										</TableCell>
 										<TableCell>{transaction.date.toString()}</TableCell>
-										<TableCell>{transaction.category || "N/A"}</TableCell>
+										<TableCell>
+											{displayTitle(transaction.category) || "N/A"}
+										</TableCell>
 										<TableCell>{transaction.notes || "N/A"}</TableCell>
 									</TableRow>
 								))}
