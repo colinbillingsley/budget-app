@@ -21,7 +21,9 @@ const TransactionForm = ({ isOpen, setIsOpen }: TransactionFormProps) => {
 		"Expense"
 	);
 	const [transactionAmount, setTransactionAmount] = useState(0);
+	const [transactionAmountError, setTransactionAmountError] = useState(false);
 	const [categoryName, setCategoryName] = useState<string>("");
+	const [categoryNameError, setCategoryNameError] = useState(false);
 	const [notes, setNotes] = useState<string>("");
 
 	const { transactions, addTransaction } = useTransactionContext();
@@ -29,8 +31,10 @@ const TransactionForm = ({ isOpen, setIsOpen }: TransactionFormProps) => {
 	function resetFormFields() {
 		setCategoryName("");
 		setTransactionAmount(0);
-		setTransactionType("Income");
+		setTransactionType("Expense");
 		setNotes("");
+		setTransactionAmountError(false);
+		setCategoryNameError(false);
 	}
 
 	function handleNotesInput(e: React.ChangeEvent<HTMLInputElement>) {
@@ -38,6 +42,7 @@ const TransactionForm = ({ isOpen, setIsOpen }: TransactionFormProps) => {
 	}
 
 	function handleBudgetInput(e: React.ChangeEvent<HTMLInputElement>) {
+		setTransactionAmountError(false);
 		setTransactionAmount(parseFloat(e.target.value) || 0);
 	}
 
@@ -46,22 +51,39 @@ const TransactionForm = ({ isOpen, setIsOpen }: TransactionFormProps) => {
 		setIsOpen(false);
 	}
 
+	async function determineErrors() {
+		let errors = false;
+		if (categoryName === "") {
+			setCategoryNameError(true);
+			errors = true;
+		}
+		if (transactionAmount === 0) {
+			setTransactionAmountError(true);
+			errors = true;
+		}
+		return errors;
+	}
+
 	async function handleAddTransaction(e: React.FormEvent) {
 		e.preventDefault();
 
-		const newTransaction = {
-			id: (transactions.length + 1).toString(),
-			amount: transactionAmount,
-			type: transactionType,
-			date: new Date(),
-			category: categoryName,
-			notes: notes,
-		};
+		const errors = await determineErrors();
 
-		addTransaction(newTransaction);
+		if (!errors) {
+			const newTransaction = {
+				id: (transactions.length + 1).toString(),
+				amount: transactionAmount,
+				type: transactionType,
+				date: new Date(),
+				category: categoryName,
+				notes: notes,
+			};
 
-		// close the modal
-		setIsOpen(false);
+			addTransaction(newTransaction);
+
+			// close the modal
+			setIsOpen(false);
+		}
 	}
 
 	// whenever category form modal is closed, reset all the fields
@@ -74,7 +96,7 @@ const TransactionForm = ({ isOpen, setIsOpen }: TransactionFormProps) => {
 	return (
 		<form action="" className="space-y-4">
 			<div className="space-y-2">
-				<Label>Type</Label>
+				<Label>Type*</Label>
 				<RadioGroup
 					value={transactionType}
 					onValueChange={setTransactionType}
@@ -101,21 +123,45 @@ const TransactionForm = ({ isOpen, setIsOpen }: TransactionFormProps) => {
 			</div>
 
 			<div className="space-y-2 flex flex-col gap-1">
-				<Label>Category</Label>
+				<Label className={`${categoryNameError ? "text-red-500" : ""}`}>
+					Category*
+				</Label>
 				<CategoryComboBox
 					categoryName={categoryName}
-					setCategoryName={setCategoryName}
+					setCategoryName={(e) => {
+						setCategoryName(e);
+						setCategoryNameError(false);
+					}}
+					error={categoryNameError}
 				/>
+				{categoryNameError ? (
+					<p className="text-red-500 text-xs">
+						Transaction category is required. Please select a category.
+					</p>
+				) : (
+					<></>
+				)}
 			</div>
 
 			<div className="space-y-2">
-				<Label>Amount</Label>
+				<Label className={`${transactionAmountError ? "text-red-500" : ""}`}>
+					Amount*
+				</Label>
 				<Input
 					type="number"
 					placeholder="Enter a number for the amount (e.g. 1100)"
 					onChange={handleBudgetInput}
-					className="border-2 border-accent text-sm transition-all focus:border-primary ring-none"
+					className={`border-2 border-accent text-sm transition-all focus:border-primary ring-none ${
+						transactionAmountError ? "border-red-500" : ""
+					}`}
 				/>
+				{transactionAmountError ? (
+					<p className="text-red-500 text-xs">
+						Transaction amount is required. Please enter an amount.
+					</p>
+				) : (
+					<></>
+				)}
 			</div>
 
 			<div className="space-y-2">

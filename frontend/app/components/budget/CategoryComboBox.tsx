@@ -21,9 +21,11 @@ import {
 const CategoryComboBox = ({
 	categoryName,
 	setCategoryName,
+	error,
 }: {
 	categoryName: string;
 	setCategoryName: React.Dispatch<React.SetStateAction<string>>;
+	error: boolean;
 }) => {
 	const [open, setOpen] = React.useState(false);
 	return (
@@ -35,7 +37,9 @@ const CategoryComboBox = ({
 					aria-expanded={open}
 					className={`w-[200px] justify-between border-2 font-normal ${
 						open ? "border-primary" : "border-accent"
-					} ${categoryName === "" ? "text-gray-500" : "text-black"}`}
+					} ${categoryName === "" ? "text-gray-500" : "text-black"} ${
+						error ? "border-red-500" : ""
+					}`}
 				>
 					{categoryName
 						? categories.find((category) => category.value === categoryName)
