@@ -1,44 +1,6 @@
-# Python
-*.pyc
-*.pyo
-*.pyd
-__pycache__/
-
-# Django
-*.log
-*.pot
-*.pyc
-*.pyo
-*.db
-*.sqlite3
-staticfiles/
-media/
-
-# PostgreSQL (ignore unnecessary database dumps)
-*.dump
-*.sql
-
-# Virtual Environment
-venv/
-env/
-.venv/
-*.env
-
-# Local Django settings (keep your settings private!)
-*.local
-
-# IDEs and Editors
-.vscode/
-.idea/
-
-# MacOS
-.DS_Store
-
-# Node.js (if applicable)
 node_modules/
-
-# Python packaging
-*.egg-info/
-
-# Caches
-*.cache/
+.env
+.env.local
+.env.development
+.env.production
+.env.test

@@ -15,9 +15,12 @@ import React, { useEffect, useState } from "react";
 import CategoryCard from "@/app/components/budget/CategoryCard";
 import H1 from "@/app/components/H1";
 import AddBudget from "@/app/components/budget/AddBudget";
+import { useTransactionContext } from "@/app/context/TransactionsContext";
 
 const Budget = () => {
 	const { categories, getNumberOfCategories } = useCategoryContext();
+	const { transactions } = useTransactionContext();
+
 	const [overallBudget, setOverallBudget] = useState<number>(0);
 	const [totalBudgetSpent, setTotalBudgetSpent] = useState<number>(0);
 	const [remainingBudget, setRemainingBudget] = useState<number>(0);
