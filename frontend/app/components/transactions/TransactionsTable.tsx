@@ -82,7 +82,6 @@ export function TransactionTable() {
 	return (
 		<div className="rounded-lg border-2 border-gray-200 p-4 bg-white">
 			<Table>
-				<TableCaption>A list of your recent transactions.</TableCaption>
 				<TableHeader>
 					<TableRow>
 						<TableHead>Type</TableHead>

@@ -10,6 +10,7 @@ import {
 	Transaction,
 	useTransactionContext,
 } from "@/app/context/TransactionsContext";
+import { useCategoryContext } from "@/app/context/CategoriesContext";
 
 interface TransactionFormProps {
 	isOpen: boolean;
@@ -26,6 +27,7 @@ const TransactionForm = ({ isOpen, setIsOpen }: TransactionFormProps) => {
 	const [categoryNameError, setCategoryNameError] = useState(false);
 	const [notes, setNotes] = useState<string>("");
 
+	const { categories } = useCategoryContext();
 	const { transactions, addTransaction } = useTransactionContext();
 
 	function resetFormFields() {
@@ -151,7 +153,7 @@ const TransactionForm = ({ isOpen, setIsOpen }: TransactionFormProps) => {
 					type="number"
 					placeholder="Enter a number for the amount (e.g. 1100)"
 					onChange={handleBudgetInput}
-					className={`border-2 border-accent text-sm transition-all focus:border-primary ring-none ${
+					className={`border-2 border-accent text-sm transition-all focus:border-primary ring-none outline-none ${
 						transactionAmountError ? "border-red-500" : ""
 					}`}
 				/>
@@ -170,7 +172,7 @@ const TransactionForm = ({ isOpen, setIsOpen }: TransactionFormProps) => {
 					type="string"
 					placeholder="Enter any notes if needed"
 					onChange={handleNotesInput}
-					className="border-2 border-accent text-sm transition-all focus:border-primary ring-none"
+					className="border-2 border-accent text-sm transition-all focus:border-primary ring-none outline-none"
 				/>
 			</div>
 
